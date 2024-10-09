@@ -14,7 +14,7 @@ namespace api.models
         public int? OpportunityId { get; set; }
         public  Opportunity? Opportunity { get; set; } 
         public int? LeadId { get; set; }
-        public  Opportunity? Lead { get; set; } 
+        public  Lead? Lead { get; set; } 
 
         
     }

@@ -11,8 +11,8 @@ namespace api.models
         public string Name { get; set; }=string.Empty;
         public string Email { get; set; }=string.Empty;
         public string PhoneNumber { get; set; }=string.Empty;
-        public int? AccountId { get; set; }
-        public  Account? Account { get; set; }
+        public int? CustomerId { get; set; }
+        public  Customer? Customer { get; set; }
         
     }
 }

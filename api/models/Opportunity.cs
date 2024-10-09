@@ -14,8 +14,8 @@ namespace api.models
     public DateTime CreatedDate { get; set; }  
     public DateTime? CloseDate { get; set; }  
     public string Status { get; set; }=string.Empty;    
-    public int? AccountId { get; set; }
-    public  Account? Account { get; set; }  
+    public int? CustomerId { get; set; }
+    public  Customer? Customer { get; set; }  
           
     }
 }
