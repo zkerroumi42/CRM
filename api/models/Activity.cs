@@ -9,12 +9,15 @@ namespace api.models
     {
         public int ActivityId { get; set; }
         public string Type { get; set; }=string.Empty;
-        public DateTime Date { get; set; }
+        public DateTime DueDate { get; set; }
         public string Description { get; set; }=string.Empty;
-        public int? OpportunityId { get; set; }
-        public  Opportunity? Opportunity { get; set; } 
+        public string Status { get; set; }=string.Empty;
         public int? LeadId { get; set; }
         public  Lead? Lead { get; set; } 
+          public string? AppUserId { get; set; }
+        public  AppUser? AppUser { get; set; } 
+          public string? CustomerId { get; set; }
+        public  Customer? Customer { get; set; } 
 
         
     }

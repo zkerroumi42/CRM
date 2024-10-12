@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Account;
+using api.interfaces;
 using api.Interfaces;
 using api.models;
 using Microsoft.AspNetCore.Identity;
@@ -18,11 +19,13 @@ namespace api.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signinManager;
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
+        private readonly IEmailService _emailService;
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager,IEmailService emailService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signinManager = signInManager;
+            _emailService=emailService;
         }
 
         [HttpPost("login")]
@@ -94,5 +97,47 @@ namespace api.Controllers
                 return StatusCode(500, e);
             }
         }
+
+        // Prototype for Logout
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signinManager.SignOutAsync();
+            return Ok(new { message = "Logged out successfully" });
+        }
+        // Remove the JWT token from local storage
+        // localStorage.removeItem("token");
+
+        // Prototype for ForgetPassword
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordDto forgetPasswordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(forgetPasswordDto.Email);
+            if (user == null) return NotFound("User not found");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            // Logic to send token to the user via email
+            
+             await _emailService.SendPasswordResetEmail(user.Email, token);
+
+            return Ok(new { message = "Password reset token sent to email", token });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            if (user == null) return NotFound("User not found");
+
+            // Reset the password using the provided token
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.        NewPassword);
+
+            if (result.Succeeded)
+                return Ok(new { message = "Password reset successful" });
+
+            return BadRequest(result.Errors);
+        }
+
+
     }
 }

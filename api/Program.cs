@@ -15,6 +15,30 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
+
+// Register IEmailService with its implementation EmailService
+// builder.Services.AddTransient<IEmailService, EmailService>(provider =>
+//     new EmailService(
+//         smtpServer: "smtp.gmail.com", // Your SMTP server address
+//         smtpPort: 465,                 // Your SMTP port (587 for TLS)
+//         smtpUser: "za.kerroumi42@gmail.com", // Your SMTP username
+//         smtpPass: "ldgz phov tmiv akqy",          // Your SMTP password
+//         fromEmail: "za.kerroumi42@gmail.com" // From email address
+//     )
+// );
+// Load SMTP settings
+var smtpSettings = builder.Configuration.GetSection("SmtpSettings").Get<SmtpSettings>();
+
+// Register the EmailService
+builder.Services.AddTransient<IEmailService, EmailService>(provider =>
+    new EmailService(
+        smtpSettings.Server,
+        smtpSettings.Port,
+        smtpSettings.Username,
+        smtpSettings.Password,
+        smtpSettings.FromEmail
+    )
+);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -64,7 +88,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 12;
 })
-.AddEntityFrameworkStores<ApplicationDBContext>();
+.AddEntityFrameworkStores<ApplicationDBContext>()
+.AddDefaultTokenProviders(); 
 
 builder.Services.AddAuthentication(options =>
 {

@@ -51,15 +51,21 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9e9526ff-3619-44e7-b1e1-88fef5544b18",
+                            Id = "11b1da01-3add-4ab9-86a8-670a6bdc7b46",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "769f5412-0f62-4e1a-ac74-b4009f2e85d7",
-                            Name = "User",
-                            NormalizedName = "USER"
+                            Id = "aae04e92-74b5-4c61-9557-2e0399630f78",
+                            Name = "Salesperson",
+                            NormalizedName = "SALESPERSON"
+                        },
+                        new
+                        {
+                            Id = "91c210e2-69a2-4b7a-923f-4acd06307bdf",
+                            Name = "Employee",
+                            NormalizedName = "EMPLOYEE"
                         });
                 });
 
@@ -167,43 +173,6 @@ namespace api.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("api.models.Account", b =>
-                {
-                    b.Property<int>("AccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Industry")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Website")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AccountId");
-
-                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("api.models.Activity", b =>
@@ -343,7 +312,7 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContactId"));
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -360,9 +329,46 @@ namespace api.Migrations
 
                     b.HasKey("ContactId");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Contacts");
+                });
+
+            modelBuilder.Entity("api.models.Customer", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Industry")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Website")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CustomerId");
+
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("api.models.Lead", b =>
@@ -403,14 +409,14 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OpportunityId"));
 
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("CloseDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -429,32 +435,74 @@ namespace api.Migrations
 
                     b.HasKey("OpportunityId");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Opportunities");
                 });
 
-            modelBuilder.Entity("api.models.Target", b =>
+            modelBuilder.Entity("api.models.Project", b =>
                 {
-                    b.Property<int>("TargetId")
+                    b.Property<int>("ProjectId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TargetId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"));
 
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
+                    b.HasKey("ProjectId");
 
-                    b.Property<decimal>("Goal")
-                        .HasColumnType("decimal(18,2)");
+                    b.ToTable("Projects");
+                });
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+            modelBuilder.Entity("api.models.SalaryService", b =>
+                {
+                    b.Property<int>("SalaryServiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasKey("TargetId");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SalaryServiceId"));
 
-                    b.ToTable("Targets");
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ServiceeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SalaryServiceId");
+
+                    b.HasIndex("AppUserId1");
+
+                    b.HasIndex("ServiceeId");
+
+                    b.ToTable("SalaryServices");
+                });
+
+            modelBuilder.Entity("api.models.Sale", b =>
+                {
+                    b.Property<int>("SaleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SaleId"));
+
+                    b.HasKey("SaleId");
+
+                    b.ToTable("Sales");
+                });
+
+            modelBuilder.Entity("api.models.Servicee", b =>
+                {
+                    b.Property<int>("ServiceeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceeId"));
+
+                    b.HasKey("ServiceeId");
+
+                    b.ToTable("Servicees");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -525,11 +573,11 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.models.Contact", b =>
                 {
-                    b.HasOne("api.models.Account", "Account")
+                    b.HasOne("api.models.Customer", "Customer")
                         .WithMany("Contacts")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("CustomerId");
 
-                    b.Navigation("Account");
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("api.models.Lead", b =>
@@ -543,23 +591,38 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.models.Opportunity", b =>
                 {
-                    b.HasOne("api.models.Account", "Account")
+                    b.HasOne("api.models.Customer", "Customer")
                         .WithMany("Opportunities")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("CustomerId");
 
-                    b.Navigation("Account");
+                    b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("api.models.Account", b =>
+            modelBuilder.Entity("api.models.SalaryService", b =>
                 {
-                    b.Navigation("Contacts");
+                    b.HasOne("api.models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId1");
 
-                    b.Navigation("Opportunities");
+                    b.HasOne("api.models.Servicee", "Servicee")
+                        .WithMany()
+                        .HasForeignKey("ServiceeId");
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Servicee");
                 });
 
             modelBuilder.Entity("api.models.Campaign", b =>
                 {
                     b.Navigation("Leads");
+                });
+
+            modelBuilder.Entity("api.models.Customer", b =>
+                {
+                    b.Navigation("Contacts");
+
+                    b.Navigation("Opportunities");
                 });
 #pragma warning restore 612, 618
         }

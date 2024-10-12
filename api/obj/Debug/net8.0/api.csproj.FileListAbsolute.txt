@@ -142,3 +142,7 @@ C:\Users\KERROUMI\Desktop\CRM\api\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\KERROUMI\Desktop\CRM\api\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
 C:\Users\KERROUMI\Desktop\CRM\api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\KERROUMI\Desktop\CRM\api\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\KERROUMI\Desktop\CRM\api\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+C:\Users\KERROUMI\Desktop\CRM\api\bin\Debug\net8.0\MailKit.dll
+C:\Users\KERROUMI\Desktop\CRM\api\bin\Debug\net8.0\MimeKit.dll
+C:\Users\KERROUMI\Desktop\CRM\api\bin\Debug\net8.0\System.Formats.Asn1.dll

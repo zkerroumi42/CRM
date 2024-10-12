@@ -25,7 +25,8 @@ namespace api.Data
         public DbSet<Sale> Sales { get; set; }  
         public DbSet<Servicee> Servicees { get; set; }
         public DbSet<Project> Projects { get; set; }  
-        public DbSet<SalaryService> SalaryServices { get; set; }  
+        public DbSet<SalaryService> SalaryServices { get; set; }
+        public DbSet<ProjectService> ProjectServices { get; set; }   
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -40,8 +41,13 @@ namespace api.Data
                 },
                 new IdentityRole
                 {
-                    Name = "User",
-                    NormalizedName = "USER"
+                    Name = "Salesperson",
+                    NormalizedName = "SALESPERSON"
+                },
+                new IdentityRole
+                {
+                    Name = "Employee",
+                    NormalizedName = "EMPLOYEE"
                 },
             };
             builder.Entity<IdentityRole>().HasData(roles);
