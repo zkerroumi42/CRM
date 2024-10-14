@@ -14,7 +14,7 @@ namespace api.Dtos.Campaign
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Description { get; set; }=string.Empty;
-        public List<LeadDto> Leads { get; set; }
+        public List<LeadDto>? Leads { get; set; }=null;
         
     }
 }

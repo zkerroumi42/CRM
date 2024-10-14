@@ -18,7 +18,7 @@ namespace api.models
     public  Lead? Lead { get; set; }    
     public int? CustomerId { get; set; }
     public  Customer? Customer { get; set; }
-        public int? AppUserId { get; set; }
+    public int? AppUserId { get; set; }
     public  AppUser? AppUser { get; set; }  
           
     }
