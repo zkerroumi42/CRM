@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Lead;
+using api.Helpers;
 using api.interfaces;
 using api.Mappers;
+using api.models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -24,9 +26,9 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
-            var Leads = await _LeadRepo.GetAllAsync();
+            var Leads = await _LeadRepo.GetAllAsync(query);
             var LeadDtos = Leads.Select(s => s.ToLeadDto());
             return Ok(LeadDtos);
         }
@@ -91,5 +93,20 @@ namespace api.Controllers
 
             return Ok(Lead);
         }
+
+        //
+        [HttpGet("{status}")]
+        public async Task<ActionResult<Lead>> GetByStatus(string status)
+        {
+            var lead = await _LeadRepo.GetByStatus(status);
+
+            if (lead == null)
+            {
+                return NotFound($"No lead found with status '{status}'.");
+            }
+
+            return Ok(lead);
+        }
+
     }
 }

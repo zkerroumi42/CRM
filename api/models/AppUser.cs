@@ -8,6 +8,8 @@ namespace api.models
 {
     public class AppUser:IdentityUser
     {
+        public List<SalaryService> SalaryServices { get; set; } = new List<SalaryService>();
+        
     
         
     }

@@ -98,17 +98,16 @@ namespace api.Controllers
             }
         }
 
-        // Prototype for Logout
+        // Remove the JWT token from local storage client
+        // localStorage.removeItem("token");
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signinManager.SignOutAsync();
             return Ok(new { message = "Logged out successfully" });
         }
-        // Remove the JWT token from local storage
-        // localStorage.removeItem("token");
 
-        // Prototype for ForgetPassword
+        
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgetPassword(ForgetPasswordDto forgetPasswordDto)
         {
@@ -116,7 +115,6 @@ namespace api.Controllers
             if (user == null) return NotFound("User not found");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            // Logic to send token to the user via email
             
              await _emailService.SendPasswordResetEmail(user.Email, token);
 
@@ -129,7 +127,6 @@ namespace api.Controllers
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
             if (user == null) return NotFound("User not found");
 
-            // Reset the password using the provided token
             var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.        NewPassword);
 
             if (result.Succeeded)

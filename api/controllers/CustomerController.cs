@@ -53,7 +53,7 @@ namespace api.controllers
                         if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var customerModel=customerDto.ToCustomerFromCreateDto();
-            await _customerRepo.CreateAsync(customerModel);
+            _ = await _customerRepo.CreateAsync(customerModel);
             return CreatedAtAction(nameof(GetById),new {id=customerModel.CustomerId},customerModel.ToCustomerDto());
 
         }

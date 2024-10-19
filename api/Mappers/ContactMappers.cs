@@ -19,7 +19,7 @@ namespace api.Mappers
 
             };
         }
-        public static Contact ToContacFromCreate(this CreateContactDto contactDto,int CustomerId){
+        public static Contact ToContactFromCreate(this CreateContactDto contactDto,int CustomerId){
             return new Contact
             {
                 Name=contactDto.Name,
@@ -29,7 +29,7 @@ namespace api.Mappers
             };
         }
 
-                public static Contact ToContacFromUpdate(this UpdateContactRequestDto contactDto){
+                public static Contact ToContactFromUpdate(this UpdateContactRequestDto contactDto){
             return new Contact
             {
                 Name=contactDto.Name,

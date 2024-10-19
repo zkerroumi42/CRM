@@ -27,8 +27,8 @@ namespace api.Repository
 
         public async Task<Customer> CreateAsync(Customer CustomerModel)
         {
-            await _context.Customers.AddAsync(CustomerModel);
-            await _context.SaveChangesAsync();
+            _ = await _context.Customers.AddAsync(CustomerModel);
+            _ = await _context.SaveChangesAsync();
             return CustomerModel;
         }
 
@@ -42,8 +42,8 @@ namespace api.Repository
                 return null;
                 
             }
-            _context.Customers.Remove(CustomerModel);
-            await _context.SaveChangesAsync();
+            _ = _context.Customers.Remove(CustomerModel);
+            _ = await _context.SaveChangesAsync();
             return CustomerModel;
         }
 
@@ -89,7 +89,7 @@ namespace api.Repository
             existingCustomer.Address=updateDto.Address;
             existingCustomer.Website=updateDto.Website;
 
-            await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
 
             return existingCustomer;
         }

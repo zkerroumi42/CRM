@@ -53,7 +53,7 @@ namespace api.controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var CampaignModel=campaignDto.ToCampaignFromCreateDto();
-            await _CampaignRepo.CreateAsync(CampaignModel);
+            _ = await _CampaignRepo.CreateAsync(CampaignModel);
             return CreatedAtAction(nameof(GetById),new {id=CampaignModel.CampaignId},CampaignModel.ToCampaignDto());
 
         }

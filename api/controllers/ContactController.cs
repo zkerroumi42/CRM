@@ -4,8 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Contact;
+using api.Helpers;
 using api.interfaces;
 using api.Mappers;
+using api.models;
+using api.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -24,9 +27,9 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
-            var contacts = await _contactRepo.GetAllAsync();
+            var contacts = await _contactRepo.GetAllAsync(query);
             var contactDtos = contacts.Select(s => s.ToContactDto());
             return Ok(contactDtos);
         }
@@ -56,8 +59,8 @@ namespace api.Controllers
                 return BadRequest("Customer does not exist");
             }
 
-            var contactModel = contactDto.ToContacFromCreate(CustomerId);
-            await _contactRepo.CreateAsync(contactModel);
+            var contactModel = contactDto.ToContactFromCreate(CustomerId);
+            _ = await _contactRepo.CreateAsync(contactModel);
             return CreatedAtAction(nameof(GetById), new { id = contactModel.ContactId }, contactModel.ToContactDto());
         }
 
@@ -69,7 +72,7 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var updatedContact = await _contactRepo.UpdateAsync(id, updateDto.ToContacFromUpdate());
+            var updatedContact = await _contactRepo.UpdateAsync(id, updateDto.ToContactFromUpdate());
 
             if (updatedContact == null)
             {
@@ -90,6 +93,19 @@ namespace api.Controllers
             }
 
             return Ok(contact);
+        }
+        //
+        [HttpGet("{customerId}")]
+        public async Task<ActionResult<List<Contact>>> GetByCustomerId(int customerId)
+        {
+            var contacts = await _contactRepo.GetByCustomerId(customerId);
+
+            if (contacts == null || contacts.Count == 0)
+            {
+                return NotFound($"No contacts found for customer with ID {customerId}.");
+            }
+
+            return Ok(contacts);
         }
     }
 }

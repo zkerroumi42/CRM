@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace api.models
 {
+        [Table("Projects")]
+
     public class Project
     {
         public int ProjectId { get; set; }
@@ -16,7 +19,9 @@ namespace api.models
         public int? CustomerId { get; set; }
         public  Customer? Customer { get; set; }
         public int? ServiceeId { get; set; }
-        public  Servicee? Servicee { get; set; } 
+        public  Servicee? Servicee { get; set; }
+        public List<ProjectService> ProjectServices { get; set; } = new List<ProjectService>();
+
 
         
     }

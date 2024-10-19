@@ -51,19 +51,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "11b1da01-3add-4ab9-86a8-670a6bdc7b46",
+                            Id = "252775d6-808e-4722-bb7e-5c5b21d6521e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "aae04e92-74b5-4c61-9557-2e0399630f78",
+                            Id = "0e62bd04-35fc-462d-9115-111774e74bdb",
                             Name = "Salesperson",
                             NormalizedName = "SALESPERSON"
                         },
                         new
                         {
-                            Id = "91c210e2-69a2-4b7a-923f-4acd06307bdf",
+                            Id = "fce06a8b-81e3-4903-899d-59ec4629deb6",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         });
@@ -183,18 +183,28 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActivityId"));
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("LeadId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OpportunityId")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -202,9 +212,11 @@ namespace api.Migrations
 
                     b.HasKey("ActivityId");
 
-                    b.HasIndex("LeadId");
+                    b.HasIndex("AppUserId1");
 
-                    b.HasIndex("OpportunityId");
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("LeadId");
 
                     b.ToTable("Activities");
                 });
@@ -285,6 +297,9 @@ namespace api.Migrations
                     b.Property<int>("Budget")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -292,12 +307,20 @@ namespace api.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Goal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CampaignId");
 
@@ -327,6 +350,10 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RoleAtCompany")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ContactId");
 
                     b.HasIndex("CustomerId");
@@ -349,6 +376,13 @@ namespace api.Migrations
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactPerson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -379,14 +413,17 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LeadId"));
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int?>("CampaignId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("LeadSource")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Source")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -395,6 +432,8 @@ namespace api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LeadId");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("CampaignId");
 
@@ -409,20 +448,29 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OpportunityId"));
 
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("CloseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LeadId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Stage")
+                    b.Property<string>("Probability")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -435,7 +483,11 @@ namespace api.Migrations
 
                     b.HasKey("OpportunityId");
 
+                    b.HasIndex("AppUserId1");
+
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("LeadId");
 
                     b.ToTable("Opportunities");
                 });
@@ -448,31 +500,107 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"));
 
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProjectName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ServiceeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ProjectId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ServiceeId");
 
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("api.models.SalaryService", b =>
+            modelBuilder.Entity("api.models.ProjectService", b =>
                 {
-                    b.Property<int>("SalaryServiceId")
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ServiceeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectServiceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectId", "ServiceeId");
+
+                    b.HasIndex("ServiceeId");
+
+                    b.ToTable("ProjectServices");
+                });
+
+            modelBuilder.Entity("api.models.Review", b =>
+                {
+                    b.Property<int>("ReviewId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SalaryServiceId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewId"));
 
-                    b.Property<int?>("AppUserId")
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("AppUserId1")
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ServiceeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReviewId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ServiceeId");
+
+                    b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("api.models.SalaryService", b =>
+                {
+                    b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("ServiceeId")
                         .HasColumnType("int");
 
-                    b.HasKey("SalaryServiceId");
+                    b.Property<DateTime>("DateEnd")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("AppUserId1");
+                    b.Property<DateTime>("DateStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SalaryServiceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppUserId", "ServiceeId");
 
                     b.HasIndex("ServiceeId");
 
@@ -487,7 +615,26 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SaleId"));
 
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.HasKey("SaleId");
+
+                    b.HasIndex("AppUserId1");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Sales");
                 });
@@ -499,6 +646,17 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceeId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("ServiceeId");
 
@@ -558,17 +716,23 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.models.Activity", b =>
                 {
+                    b.HasOne("api.models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId1");
+
+                    b.HasOne("api.models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
                     b.HasOne("api.models.Lead", "Lead")
                         .WithMany()
                         .HasForeignKey("LeadId");
 
-                    b.HasOne("api.models.Opportunity", "Opportunity")
-                        .WithMany()
-                        .HasForeignKey("OpportunityId");
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Lead");
-
-                    b.Navigation("Opportunity");
                 });
 
             modelBuilder.Entity("api.models.Contact", b =>
@@ -582,35 +746,126 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.models.Lead", b =>
                 {
+                    b.HasOne("api.models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("api.models.Campaign", "Campaign")
                         .WithMany("Leads")
                         .HasForeignKey("CampaignId");
+
+                    b.Navigation("AppUser");
 
                     b.Navigation("Campaign");
                 });
 
             modelBuilder.Entity("api.models.Opportunity", b =>
                 {
+                    b.HasOne("api.models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId1");
+
                     b.HasOne("api.models.Customer", "Customer")
                         .WithMany("Opportunities")
                         .HasForeignKey("CustomerId");
 
+                    b.HasOne("api.models.Lead", "Lead")
+                        .WithMany()
+                        .HasForeignKey("LeadId");
+
+                    b.Navigation("AppUser");
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Lead");
                 });
 
-            modelBuilder.Entity("api.models.SalaryService", b =>
+            modelBuilder.Entity("api.models.Project", b =>
                 {
-                    b.HasOne("api.models.AppUser", "AppUser")
+                    b.HasOne("api.models.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("AppUserId1");
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("api.models.Servicee", "Servicee")
                         .WithMany()
                         .HasForeignKey("ServiceeId");
 
+                    b.Navigation("Customer");
+
+                    b.Navigation("Servicee");
+                });
+
+            modelBuilder.Entity("api.models.ProjectService", b =>
+                {
+                    b.HasOne("api.models.Project", "Project")
+                        .WithMany("ProjectServices")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("api.models.Servicee", "Servicee")
+                        .WithMany("ProjectServices")
+                        .HasForeignKey("ServiceeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Servicee");
+                });
+
+            modelBuilder.Entity("api.models.Review", b =>
+                {
+                    b.HasOne("api.models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.HasOne("api.models.Servicee", "Servicee")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ServiceeId");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Servicee");
+                });
+
+            modelBuilder.Entity("api.models.SalaryService", b =>
+                {
+                    b.HasOne("api.models.AppUser", "AppUser")
+                        .WithMany("SalaryServices")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("api.models.Servicee", "Servicee")
+                        .WithMany("SalaryServices")
+                        .HasForeignKey("ServiceeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("AppUser");
 
                     b.Navigation("Servicee");
+                });
+
+            modelBuilder.Entity("api.models.Sale", b =>
+                {
+                    b.HasOne("api.models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId1");
+
+                    b.HasOne("api.models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId");
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("api.models.AppUser", b =>
+                {
+                    b.Navigation("SalaryServices");
                 });
 
             modelBuilder.Entity("api.models.Campaign", b =>
@@ -623,6 +878,20 @@ namespace api.Migrations
                     b.Navigation("Contacts");
 
                     b.Navigation("Opportunities");
+                });
+
+            modelBuilder.Entity("api.models.Project", b =>
+                {
+                    b.Navigation("ProjectServices");
+                });
+
+            modelBuilder.Entity("api.models.Servicee", b =>
+                {
+                    b.Navigation("ProjectServices");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("SalaryServices");
                 });
 #pragma warning restore 612, 618
         }

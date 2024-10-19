@@ -6,7 +6,7 @@ using api.Dtos.Lead;
 
 namespace api.Dtos.ProjectService
 {
-    public class CampaignDto
+    public class ProjectServiceDto
     {
         public int ProjectServiceId { get; set; }
         public int? ProjectId { get; set; }

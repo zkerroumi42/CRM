@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Helpers;
 using api.interfaces;
 using api.models;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -39,14 +40,30 @@ namespace api.Repository
             return LeadModel;
         }
 
-        public async Task<List<Lead>> GetAllAsync()
+        public async Task<List<Lead>> GetAllAsync(QueryObject query)
         {
-           return await _context.Leads.ToListAsync();
+                        var Leads = _context.Leads.AsQueryable();
+
+
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                Leads = query.IsDecending
+                    ? Leads.OrderByDescending(a => EF.Property<object>(a, query.SortBy))
+                    : Leads.OrderBy(a => EF.Property<object>(a, query.SortBy));
+            }
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+            return await Leads.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Lead?> GetByIdAsync(int id)
         {
              return await _context.Leads.FindAsync(id);
+        }
+
+        public async Task<Lead?> GetByStatus(string Status)
+        {
+             return await _context.Leads
+                                 .FirstOrDefaultAsync(l => l.Status.Equals(Status, StringComparison.OrdinalIgnoreCase));
         }
 
         public async Task<Lead?> UpdateAsync(int id, Lead LeadModel)
@@ -58,7 +75,7 @@ namespace api.Repository
             }
             existingLead.Name=LeadModel.Name;
             existingLead.Status=LeadModel.Status;
-            existingLead.Source=LeadModel.Source;
+            existingLead.LeadSource=LeadModel.LeadSource;
             await _context.SaveChangesAsync();
             return existingLead;
 

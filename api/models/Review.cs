@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace api.models
 {
+    [Table("Reviews")]
+
     public class Review
     {
         public int ReviewId { get; set; }
@@ -13,5 +16,8 @@ namespace api.models
         public DateTime CreateAt { get; set; }
         public int? CustomerId { get; set; }
         public  Customer? Customer { get; set; }
+        public int? ServiceeId { get; set; }
+        public  Servicee? Servicee { get; set; }
+        
     }
 }

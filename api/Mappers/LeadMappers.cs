@@ -14,7 +14,7 @@ namespace api.Mappers
                 LeadId=LeadModel.LeadId,
                 Name=LeadModel.Name,
                 Status=LeadModel.Status,
-                Source=LeadModel.Source,
+                Source=LeadModel.LeadSource,
                 CampaignId=LeadModel.CampaignId
 
             };
@@ -24,7 +24,7 @@ namespace api.Mappers
             {
                 Name=LeadDto.Name,
                 Status=LeadDto.Status,
-                Source=LeadDto.Source,
+                LeadSource=LeadDto.Source,
                 CampaignId=campaignId
             };
         }
@@ -34,7 +34,7 @@ namespace api.Mappers
             {
                 Name=LeadDto.Name,
                 Status=LeadDto.Status,
-                Source=LeadDto.Source,
+                LeadSource=LeadDto.Source,
             };
         }
         
