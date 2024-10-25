@@ -13,12 +13,12 @@ namespace api.interfaces
         Task<List<Activity>>GetAllAsync(QueryObject query);
         Task<Activity>GetByIdAsync(int id);
         Task<Activity>CreateAsync(Activity ActivityModel);
-        Task<Activity>UpdateAsync(int id,UpdateActivityRequestDto ActivityDto);
+        Task<Activity>UpdateAsync(int id,Activity ActivityDto);
         Task<Activity>DeleteAsync(int id);
-        Task<List<Activity>> GetByClient(int clientId);
-        Task<List<Activity>> GetByLead(int leadId);
-        // Task<List<Activity>> GetByProject(int projectId);
-        Task<List<Activity>> GetBySalesperson(int userId);
+        Task<List<Activity>> GetByCustomerId(int customerId);
+        Task<List<Activity>> GetByLeadId(int leadId);
+        // // Task<List<Activity>> GetByProject(int projectId);
+        Task<List<Activity>> GetBySalespersonId(int salesId);
         Task<List<Activity>> GetByDay(DateTime date);
         Task<Activity> UpdateStatus(int ActivityId, string status);
     }

@@ -1,91 +1,97 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
-using api.Dtos.Project;
 using api.Helpers;
 using api.interfaces;
 using api.models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
-namespace api.Repositories
+namespace api.Repository
 {
-    public class ProjectRepository : IProjectRepository
+    public class ProjectRepository:IProjectRepository
     {
         private readonly ApplicationDBContext _context;
-
         public ProjectRepository(ApplicationDBContext context)
         {
-            _context = context;
+            _context=context;
+            
+        }
+
+        public async Task<Project> CreateAsync(Project ProjectModel)
+        {
+            _ = await _context.Projects.AddAsync(ProjectModel);
+            _ = await _context.SaveChangesAsync();
+            return ProjectModel;
+        }
+
+        public async Task<Project?> DeleteAsync(int id)
+        {
+            var ProjectModel=await _context.Projects.FirstOrDefaultAsync(x=>x.ProjectId==id);
+
+            if (ProjectModel==null)
+            {
+                return null;
+            }
+            _ = _context.Projects.Remove(ProjectModel);
+            _ = await _context.SaveChangesAsync();
+            return ProjectModel;
         }
 
         public async Task<List<Project>> GetAllAsync(QueryObject query)
         {
-            var projects = _context.Projects.AsQueryable();
-
+            var Projects = _context.Projects.AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
-                projects = query.IsDecending
-                    ? projects.OrderByDescending(p => EF.Property<object>(p, query.SortBy))
-                    : projects.OrderBy(p => EF.Property<object>(p, query.SortBy));
+                Projects = query.IsDecending
+                    ? Projects.OrderByDescending(c => EF.Property<object>(c, query.SortBy))
+                    : Projects.OrderBy(c => EF.Property<object>(c, query.SortBy));
             }
 
             var skipNumber = (query.PageNumber - 1) * query.PageSize;
-            return await projects.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            return await Projects.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+                
+                }
+
+        public async Task<List<Project>> GetByCustomerId(int customerId)
+        {
+                return await _context.Projects
+                         .Where(c => c.CustomerId == customerId) 
+                         .ToListAsync();
         }
 
-        public async Task<Project> GetByIdAsync(int id)
+        public async Task<Project?> GetByIdAsync(int id)
         {
-            return await _context.Projects.FindAsync(id);
+             return await _context.Projects.FindAsync(id);
         }
 
-        public async Task<Project> CreateAsync(Project projectModel)
+        public async Task<Project?> UpdateAsync(int id, Project ProjectModel)
         {
-            await _context.Projects.AddAsync(projectModel);
-            await _context.SaveChangesAsync();
-            return projectModel;
-        }
+            var existingProject=await _context.Projects.FindAsync(id);
+            if (existingProject==null)
+            {
+                return null;
+            }
+            existingProject.ProjectName=ProjectModel.ProjectName;
+            existingProject.Status=ProjectModel.Status;
+            existingProject.CreateAt=ProjectModel.CreateAt;
+            existingProject.StartDate=ProjectModel.StartDate;
+            existingProject.EndDate=ProjectModel.EndDate;
+            _ = await _context.SaveChangesAsync();
+            return existingProject;
 
-        public async Task<Project> UpdateAsync(int id, UpdateProjectRequestDto projectDto)
-        {
-            var project = await _context.Projects.FindAsync(id);
-
-            if (project == null) return null;
-
-            project.ProjectName = projectDto.ProjectName;
-            project.CreateAt = projectDto.CreateAt;
-            project.StartDate = projectDto.StartDate;
-            project.EndDate = projectDto.EndDate;
-            project.Status = projectDto.Status;
-
-            await _context.SaveChangesAsync();
-            return project;
-        }
-
-        public async Task<Project> DeleteAsync(int id)
-        {
-            var project = await _context.Projects.FindAsync(id);
-            if (project == null) return null;
-
-            _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
-            return project;
-        }
-
-        public async Task<List<Project>> GetByClient(int clientId)
-        {
-            return await _context.Projects
-                                 .Where(p => p.CustomerId == clientId)
-                                 .ToListAsync();
         }
 
         public async Task<Project> UpdateStatus(int projectId, string status)
         {
             var project = await _context.Projects.FindAsync(projectId);
             if (project == null) return null;
-
             project.Status = status;
-            await _context.SaveChangesAsync();
-            return project;
+            _ = await _context.SaveChangesAsync();
+            return  project;
         }
+        
     }
 }

@@ -13,12 +13,13 @@ namespace api.interfaces
         Task<List<Opportunity>>GetAllAsync(QueryObject query);
         Task<Opportunity>GetByIdAsync(int id);
         Task<Opportunity>CreateAsync(Opportunity OpportunityModel);
-        Task<Opportunity>UpdateAsync(int id,UpdateOpportunityRequestDto OpportunityDto);
+        Task<Opportunity>UpdateAsync(int id,Opportunity OpportunityDto);
         Task<Opportunity>DeleteAsync(int id);
-        Task<List<Opportunity>> GetBySalesperson(int AppUserId);
-        Task<List<Opportunity>> GetByClient(int clientId);
-        Task<List<Opportunity>> GetByLead(int LeadId);
-        Task<Opportunity> UpdateStatus(int opportunityId, string status);
-        
+        Task<List<Opportunity>> GetByCustomerId(int customerId);
+        Task<List<Opportunity>> GetByLeadId(int leadId);
+        // // Task<List<Opportunity>> GetByProject(int projectId);
+        Task<List<Opportunity>> GetBySalespersonId(int salesId);
+        Task<List<Opportunity>> GetByDay(DateTime date);
+        Task<Opportunity> UpdateStatus(int OpportunityId, string status);
     }
 }

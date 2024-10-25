@@ -2,6 +2,7 @@ using api.Data;
 using api.interfaces;
 using api.Interfaces;
 using api.models;
+using api.Repositories;
 using api.Repository;
 using api.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,17 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
-
-// Register IEmailService with its implementation EmailService
-// builder.Services.AddTransient<IEmailService, EmailService>(provider =>
-//     new EmailService(
-//         smtpServer: "smtp.gmail.com", // Your SMTP server address
-//         smtpPort: 465,                 // Your SMTP port (587 for TLS)
-//         smtpUser: "za.kerroumi42@gmail.com", // Your SMTP username
-//         smtpPass: "ldgz phov tmiv akqy",          // Your SMTP password
-//         fromEmail: "za.kerroumi42@gmail.com" // From email address
-//     )
-// );
 // Load SMTP settings
 var smtpSettings = builder.Configuration.GetSection("SmtpSettings").Get<SmtpSettings>();
 
@@ -77,7 +67,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    _ = options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
@@ -120,6 +110,14 @@ builder.Services.AddScoped<IContactRepository,ContactRepository>();
 builder.Services.AddScoped<ILeadRepository,LeadRepository>();
 builder.Services.AddScoped<ICampaignRepository,CampaignRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ISalaryServiceRepository, SalaryServiceRepository>();
+builder.Services.AddScoped<IServiceeRepository, ServiceeRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+builder.Services.AddScoped<IProjectRepository,ProjectRepository>();
+builder.Services.AddScoped<IOpportunityRepository,OpportunityRepository>();
+builder.Services.AddScoped<IProjectServiceRepository,ProjectServiceRepository>();
+builder.Services.AddScoped<IActivityRepository,ActivityRepository>();
 
 // builder.Services.AddScoped<IFMPService, FMPService>();
 // builder.Services.AddHttpClient<IFMPService, FMPService>();
@@ -130,8 +128,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    _ = app.UseSwagger();
+    _ = app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

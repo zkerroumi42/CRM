@@ -14,9 +14,12 @@ namespace api.Mappers
                 ProjectServiceId=ProjectServiceModel.ProjectServiceId,
             };
         }
-        public static ProjectService ToProjectServiceFromCreate(this CreateProjectServicenRequestDto ProjectServiceDto,int CustomerId){
+        public static ProjectService ToProjectServiceFromCreate(this CreateProjectServicenRequestDto ProjectServiceDto){
             return new ProjectService
             {
+                ProjectId=ProjectServiceDto.ProjectId,
+                ServiceeId=ProjectServiceDto.ServiceeId,
+                
             };
         }
 

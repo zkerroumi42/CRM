@@ -18,6 +18,10 @@ namespace api.Mappers
         public static SalaryService ToSalaryFromCreate(this CreateSalaryServiceRequestDto SalaryServiceDto){
             return new SalaryService
             {
+                AppUserId=SalaryServiceDto.AppUserId,
+                DateStart=SalaryServiceDto.DateStart,
+                DateEnd=SalaryServiceDto.DateEnd,
+                ServiceeId=SalaryServiceDto.ServiceeId
 
             };
         }

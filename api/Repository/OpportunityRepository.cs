@@ -7,101 +7,114 @@ using api.Dtos.Opportunity;
 using api.Helpers;
 using api.interfaces;
 using api.models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
-namespace api.Repositories
+namespace api.Repository
 {
-    public class OpportunityRepository : IOpportunityRepository
+    public class OpportunityRepository:IOpportunityRepository
     {
         private readonly ApplicationDBContext _context;
-
         public OpportunityRepository(ApplicationDBContext context)
         {
-            _context = context;
+            _context=context;
+            
+        }
+
+        public async Task<Opportunity> CreateAsync(Opportunity OpportunityModel)
+        {
+            _ = await _context.Opportunities.AddAsync(OpportunityModel);
+            _ = await _context.SaveChangesAsync();
+            return OpportunityModel;
+        }
+
+        public async Task<Opportunity?> DeleteAsync(int id)
+        {
+            var OpportunityModel=await _context.Opportunities.FirstOrDefaultAsync(x=>x.OpportunityId==id);
+
+            if (OpportunityModel==null)
+            {
+                return null;
+            }
+            _ = _context.Opportunities.Remove(OpportunityModel);
+            _ = await _context.SaveChangesAsync();
+            return OpportunityModel;
         }
 
         public async Task<List<Opportunity>> GetAllAsync(QueryObject query)
         {
-            var opportunities = _context.Opportunities.AsQueryable();
-            
+            var Opportunitys = _context.Opportunities.AsQueryable();
+
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
-                opportunities = query.IsDecending
-                    ? opportunities.OrderByDescending(o => EF.Property<object>(o, query.SortBy))
-                    : opportunities.OrderBy(o => EF.Property<object>(o, query.SortBy));
+                Opportunitys = query.IsDecending
+                    ? Opportunitys.OrderByDescending(c => EF.Property<object>(c, query.SortBy))
+                    : Opportunitys.OrderBy(c => EF.Property<object>(c, query.SortBy));
             }
 
             var skipNumber = (query.PageNumber - 1) * query.PageSize;
-            return await opportunities.Skip(skipNumber).Take(query.PageSize).ToListAsync();
-        }
+            return await Opportunitys.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+                
+                }
 
-        public async Task<Opportunity> GetByIdAsync(int id)
+        public async Task<List<Opportunity>> GetByCustomerId(int customerId)
         {
-            return await _context.Opportunities.FindAsync(id);
+                return await _context.Opportunities
+                         .Where(c => c.CustomerId == customerId) 
+                         .ToListAsync();
         }
 
-        public async Task<Opportunity> CreateAsync(Opportunity opportunityModel)
-        {
-            await _context.Opportunities.AddAsync(opportunityModel);
-            await _context.SaveChangesAsync();
-            return opportunityModel;
-        }
-
-        public async Task<Opportunity> UpdateAsync(int id, UpdateOpportunityRequestDto opportunityDto)
-        {
-            var opportunity = await _context.Opportunities.FindAsync(id);
-            if (opportunity == null) return null;
-
-            opportunity.Name = opportunityDto.Name;
-            opportunity.Status = opportunityDto.Status;
-            opportunity.Probability = opportunityDto.Probability;
-            opportunity.Value = opportunityDto.Value;
-            opportunity.CreatedAt = opportunityDto.CreatedAt;
-            opportunity.CloseDate = opportunityDto.CloseDate;
-
-            await _context.SaveChangesAsync();
-            return opportunity;
-        }
-
-        public async Task<Opportunity> DeleteAsync(int id)
-        {
-            var opportunity = await _context.Opportunities.FindAsync(id);
-            if (opportunity == null) return null;
-
-            _context.Opportunities.Remove(opportunity);
-            await _context.SaveChangesAsync();
-            return opportunity;
-        }
-
-        public async Task<List<Opportunity>> GetBySalesperson(int appUserId)
+        public async Task<List<Opportunity>> GetByDay(DateTime date)
         {
             return await _context.Opportunities
-                                 .Where(o => o.AppUserId == appUserId)
-                                 .ToListAsync();
+                         .Where(c => c.CreatedAt.Date == date.Date) 
+                         .ToListAsync();
         }
 
-        public async Task<List<Opportunity>> GetByClient(int clientId)
+        public async Task<Opportunity?> GetByIdAsync(int id)
+        {
+             return await _context.Opportunities.FindAsync(id);
+        }
+
+        public async Task<List<Opportunity>> GetByLeadId(int leadId)
         {
             return await _context.Opportunities
-                                 .Where(o => o.CustomerId == clientId)
-                                 .ToListAsync();
+                         .Where(c => c.LeadId == leadId) 
+                         .ToListAsync();
         }
 
-        public async Task<List<Opportunity>> GetByLead(int leadId)
+        public async Task<List<Opportunity>> GetBySalespersonId(int salesId)
         {
             return await _context.Opportunities
-                                 .Where(o => o.LeadId == leadId)
-                                 .ToListAsync();
+                         .Where(c => c.AppUserId == salesId) 
+                         .ToListAsync();
         }
 
-        public async Task<Opportunity> UpdateStatus(int opportunityId, string status)
+        public async Task<Opportunity?> UpdateAsync(int id, Opportunity OpportunityModel)
         {
-            var opportunity = await _context.Opportunities.FindAsync(opportunityId);
-            if (opportunity == null) return null;
+            var existingOpportunity=await _context.Opportunities.FindAsync(id);
+            if (existingOpportunity==null)
+            {
+                return null;
+            }
+            existingOpportunity.Name=OpportunityModel.Name;
+            existingOpportunity.Value=OpportunityModel.Value;
+            existingOpportunity.Status=OpportunityModel.Status;
+            existingOpportunity.Probability=OpportunityModel.Probability;
+            existingOpportunity.CreatedAt=OpportunityModel.CreatedAt;
+            existingOpportunity.CloseDate=OpportunityModel.CloseDate;
+            _ = await _context.SaveChangesAsync();
+            return existingOpportunity;
 
-            opportunity.Status = status;
-            await _context.SaveChangesAsync();
-            return opportunity;
+        }
+
+        public async Task<Opportunity> UpdateStatus(int OpportunityId, string status)
+        {
+            var Opportunity = await _context.Opportunities.FindAsync(OpportunityId);
+            if (Opportunity == null) return null;
+            Opportunity.Status = status;
+            _ = await _context.SaveChangesAsync();
+            return Opportunity;
         }
     }
 }

@@ -20,7 +20,8 @@ namespace api.Mappers
 
             };
         }
-        public static Project ToProjectFromCreate(this CreateProjectRequestDto ProjectDto){
+        public static Project ToProjectFromCreate(this CreateProjectRequestDto ProjectDto, int customerId)
+        {
             return new Project
             {
                 ProjectName=ProjectDto.ProjectName,

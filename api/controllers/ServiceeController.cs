@@ -26,7 +26,6 @@ namespace api.controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] QueryObject query){
             var Servicee=await _ServiceeRepo.GetAllAsync(query);
             var ServiceeDto=Servicee.Select(s=>s.ToServiceeDto());
@@ -34,7 +33,6 @@ namespace api.controllers
 
         }
         [HttpGet("{id:int}")]
-        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id){
                         if (!ModelState.IsValid)
                 return BadRequest(ModelState);

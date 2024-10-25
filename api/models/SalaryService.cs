@@ -11,7 +11,7 @@ namespace api.models
     public class SalaryService
     {
         public int SalaryServiceId { get; set; }
-        public DateTime DateStart { get; set; }
+        public DateTime DateStart { get; set; }=DateTime.Now;
         public DateTime DateEnd { get; set; }
         public string? AppUserId { get; set; }
         public  AppUser? AppUser { get; set; }

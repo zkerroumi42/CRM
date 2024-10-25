@@ -1,106 +1,151 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using api.Data;
 using api.Dtos.Opportunity;
 using api.Helpers;
 using api.interfaces;
+using api.Mappers;
 using api.models;
+using api.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class OpportunitiesController : ControllerBase
+    [Route("api/[controller]")]
+    public class OpportunityController : ControllerBase
     {
-        private readonly IOpportunityRepository _opportunityRepository;
+        private readonly IOpportunityRepository _OpportunityRepo;
+        private readonly ICustomerRepository _CustomerRepo;
+        private readonly ILeadRepository _LeadRepo;
 
-        public OpportunitiesController(IOpportunityRepository opportunityRepository)
+        public OpportunityController(IOpportunityRepository OpportunityRepo, ICustomerRepository CustomerRepo,ILeadRepository LeadRepo)
         {
-            _opportunityRepository = opportunityRepository;
+            _OpportunityRepo = OpportunityRepo;
+            _CustomerRepo = CustomerRepo;
+            _LeadRepo=LeadRepo;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Opportunity>>> GetAll([FromQuery] QueryObject query)
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
-            var opportunities = await _opportunityRepository.GetAllAsync(query);
-            return Ok(opportunities);
+            var Activities = await _OpportunityRepo.GetAllAsync(query);
+            var OpportunityDtos = Activities.Select(s => s.ToOpportunityDto());
+            return Ok(OpportunityDtos);
         }
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Opportunity>> GetById(int id)
-        {
-            var opportunity = await _opportunityRepository.GetByIdAsync(id);
 
-            if (opportunity == null)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            var Opportunity = await _OpportunityRepo.GetByIdAsync(id);
+            if (Opportunity == null)
             {
-                return NotFound($"Opportunity with ID {id} not found.");
+                return NotFound("Opportunity not found");
             }
 
-            return Ok(opportunity);
+            return Ok(Opportunity.ToOpportunityDto());
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Opportunity>> Create([FromBody] Opportunity opportunityModel)
+        [HttpPost("{CustomerId:int}")]
+        public async Task<IActionResult> Create([FromRoute] int CustomerId, [FromBody] CreateOpportunityRequestDto OpportunityDto)
         {
-            var createdOpportunity = await _opportunityRepository.CreateAsync(opportunityModel);
-            return CreatedAtAction(nameof(GetById), new { id = createdOpportunity.OpportunityId }, createdOpportunity);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!await _CustomerRepo.CustomerExists(CustomerId))
+            {
+                return BadRequest("Customer does not exist");
+            }
+
+            var OpportunityModel = OpportunityDto.ToOpportunityFromCreate(CustomerId);
+            _ = await _OpportunityRepo.CreateAsync(OpportunityModel);
+            return CreatedAtAction(nameof(GetById), new { id = OpportunityModel.OpportunityId }, OpportunityModel.ToOpportunityDto());
         }
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Opportunity>> Update(int id, [FromBody] UpdateOpportunityRequestDto opportunityDto)
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateOpportunityRequestDto updateDto)
         {
-            var updatedOpportunity = await _opportunityRepository.UpdateAsync(id, opportunityDto);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var updatedOpportunity = await _OpportunityRepo.UpdateAsync(id, updateDto.ToOpportunityFromUpdate());
 
             if (updatedOpportunity == null)
             {
-                return NotFound($"Opportunity with ID {id} not found.");
+                return NotFound("Opportunity not found");
             }
 
-            return Ok(updatedOpportunity);
+            return Ok(updatedOpportunity.ToOpportunityDto());
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Opportunity>> Delete(int id)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var deletedOpportunity = await _opportunityRepository.DeleteAsync(id);
+            var Opportunity = await _OpportunityRepo.DeleteAsync(id);
 
-            if (deletedOpportunity == null)
+            if (Opportunity == null)
             {
-                return NotFound($"Opportunity with ID {id} not found.");
+                return NotFound("Opportunity does not exist");
             }
 
-            return Ok(deletedOpportunity);
+            return Ok(Opportunity);
         }
-
-        [HttpGet("salesperson/{appUserId}")]
-        public async Task<ActionResult<List<Opportunity>>> GetBySalesperson(int appUserId)
+        //
+        [HttpGet("{customerId}")]
+        public async Task<ActionResult<List<Opportunity>>> GetByCustomerId(int customerId)
         {
-            var opportunities = await _opportunityRepository.GetBySalesperson(appUserId);
-            return Ok(opportunities);
-        }
+            var Activities = await _OpportunityRepo.GetByCustomerId(customerId);
 
-        [HttpGet("client/{clientId}")]
-        public async Task<ActionResult<List<Opportunity>>> GetByClient(int clientId)
-        {
-            var opportunities = await _opportunityRepository.GetByClient(clientId);
-            return Ok(opportunities);
-        }
-        [HttpGet("lead/{leadId}")]
-        public async Task<ActionResult<List<Opportunity>>> GetByLead(int leadId)
-        {
-            var opportunities = await _opportunityRepository.GetByLead(leadId);
-            return Ok(opportunities);
-        }
-
-        [HttpPut("status/{id}")]
-        public async Task<ActionResult<Opportunity>> UpdateStatus(int id, [FromBody] string status)
-        {
-            var updatedOpportunity = await _opportunityRepository.UpdateStatus(id, status);
-
-            if (updatedOpportunity == null)
+            if (Activities == null || Activities.Count == 0)
             {
-                return NotFound($"Opportunity with ID {id} not found.");
+                return NotFound($"No Activities found for customer with ID {customerId}.");
             }
 
-            return Ok(updatedOpportunity);
+            return Ok(Activities);
         }
+        [HttpGet("{LeadId}")]
+        public async Task<ActionResult<List<Opportunity>>> GetByLeadId(int LeadId)
+        {
+            var Activities = await _OpportunityRepo.GetByLeadId(LeadId);
+
+            if (Activities == null || Activities.Count == 0)
+            {
+                return NotFound($"No Activities found for customer with ID {LeadId}.");
+            }
+
+            return Ok(Activities);
+        }
+        [HttpGet("{AppUserId}")]
+        public async Task<ActionResult<List<Opportunity>>> GetBySalespersonId(int AppUserId)
+        {
+            var Activities = await _OpportunityRepo.GetBySalespersonId(AppUserId);
+
+            if (Activities == null || Activities.Count == 0)
+            {
+                return NotFound($"No Activities found for SalesPerson with ID {AppUserId}.");
+            }
+
+            return Ok(Activities);
+        }
+        [HttpGet("day/{date}")]
+        public async Task<ActionResult<List<Opportunity>>> GetByDay(DateTime date){
+            var activities = await _OpportunityRepo.GetByDay(date);
+            return Ok(activities);
+
+        }
+        [HttpPatch("{id}/status")]
+        public async Task<ActionResult<Opportunity>> UpdateStatus(int id, [FromBody] UpdateOpportunityRequestDto statusDto){
+            var updatedOpportunity = await _OpportunityRepo.UpdateStatus(id, statusDto.Status);
+            if (updatedOpportunity == null) return NotFound();
+            return Ok(updatedOpportunity);
+
+        }
+
     }
 }

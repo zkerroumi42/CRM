@@ -18,8 +18,8 @@ namespace api.Repositories
 
         public async Task<ProjectService> AssignServiceToProject(ProjectService projectService)
         {
-            await _context.ProjectServices.AddAsync(projectService);
-            await _context.SaveChangesAsync();
+            _ = await _context.ProjectServices.AddAsync(projectService);
+            _ = await _context.SaveChangesAsync();
             return projectService;
         }
 
@@ -31,7 +31,7 @@ namespace api.Repositories
             existingProjectService.ProjectId = projectService.ProjectId;
             existingProjectService.ServiceeId = projectService.ServiceeId;
 
-            await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
             return existingProjectService;
         }
 
@@ -40,29 +40,27 @@ namespace api.Repositories
             var projectService = await _context.ProjectServices.FindAsync(projectServiceId);
             if (projectService == null) return false;
 
-            _context.ProjectServices.Remove(projectService);
-            await _context.SaveChangesAsync();
+            _ = _context.ProjectServices.Remove(projectService);
+            _ = await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<List<Servicee>> GetServicesByProject(int projectId)
         {
-#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
             return await _context.ProjectServices
                                  .Where(ps => ps.ProjectId == projectId)
                                  .Select(ps => ps.Servicee)
                                  .ToListAsync();
-#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
         }
 
         public async Task<List<Project>> GetProjectsByService(int serviceId)
         {
-#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+
             return await _context.ProjectServices
                                  .Where(ps => ps.ServiceeId == serviceId)
                                  .Select(ps => ps.Project)
                                  .ToListAsync();
-#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+
         }
 
         public async Task<ProjectService> GetProjectServiceById(int projectServiceId)

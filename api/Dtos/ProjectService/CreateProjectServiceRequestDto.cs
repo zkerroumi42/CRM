@@ -7,6 +7,8 @@ namespace api.Dtos.ProjectService
 {
     public class CreateProjectServicenRequestDto
     {
+        public int? ProjectId { get; set; }
+        public int? ServiceeId { get; set; }
         
     }
 }
