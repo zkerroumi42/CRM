@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Helpers;
 
 namespace api.models
 {
@@ -10,9 +12,10 @@ namespace api.models
 
     public class Project
     {
+        [Key]
         public int ProjectId { get; set; }
         public string ProjectName { get; set; }=string.Empty;
-        public string Status { get; set; }=string.Empty;
+        public string Status { get; set; }=ProjectStatus.NotStarted;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime CreateAt { get; set; }   
