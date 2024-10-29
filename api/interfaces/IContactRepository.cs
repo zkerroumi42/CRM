@@ -9,7 +9,7 @@ namespace api.interfaces
 {
     public interface IContactRepository
     {
-        Task<List<Contact>>GetAllAsync(QueryObject query);
+        Task<List<Contact>>GetAllAsync(QO1 query);
         Task<Contact?>GetByIdAsync(int id);
         Task<Contact>CreateAsync(Contact ContactModel);
         Task<Contact?>UpdateAsync(int id,Contact contactModel);

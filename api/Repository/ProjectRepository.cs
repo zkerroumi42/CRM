@@ -40,20 +40,28 @@ namespace api.Repository
             return ProjectModel;
         }
 
-        public async Task<List<Project>> GetAllAsync(QueryObject query)
+        public async Task<List<Project>> GetAllAsync(QO1 query)
         {
             var Projects = _context.Projects.AsQueryable();
+            if(!string.IsNullOrWhiteSpace(query.Name))
+            {
+                Projects=Projects.Where(s=>s.Name.Contains(query.Name));
+            }
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
-                Projects = query.IsDecending
-                    ? Projects.OrderByDescending(c => EF.Property<object>(c, query.SortBy))
-                    : Projects.OrderBy(c => EF.Property<object>(c, query.SortBy));
-            }
-
-            var skipNumber = (query.PageNumber - 1) * query.PageSize;
-            return await Projects.Skip(skipNumber).Take(query.PageSize).ToListAsync();
-                
+                if (query.SortBy.Equals("Name",StringComparison.OrdinalIgnoreCase))
+                {
+                    Projects=query.IsDecending ? Projects.OrderByDescending(s=>s.Name):Projects.OrderBy(s=>s.Name);
+                    
                 }
+
+   
+            }
+            var skipNumber=(query.PageNumber-1)*query.PageSize;
+
+            return await Projects.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            
+        }
 
         public async Task<List<Project>> GetByCustomerId(int customerId)
         {
@@ -74,7 +82,7 @@ namespace api.Repository
             {
                 return null;
             }
-            existingProject.ProjectName=ProjectModel.ProjectName;
+            existingProject.Name=ProjectModel.Name;
             existingProject.Status=ProjectModel.Status;
             existingProject.CreateAt=ProjectModel.CreateAt;
             existingProject.StartDate=ProjectModel.StartDate;

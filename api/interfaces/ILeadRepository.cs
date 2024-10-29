@@ -9,7 +9,7 @@ namespace api.interfaces
 {
     public interface ILeadRepository
     {
-        Task<List<Lead>>GetAllAsync(QueryObject query);
+        Task<List<Lead>>GetAllAsync(QO1 query);
         Task<Lead?>GetByIdAsync(int id);
         Task<Lead>CreateAsync(Lead LeadModel);
         Task<Lead?>UpdateAsync(int id,Lead LeadModel);

@@ -14,7 +14,7 @@ namespace api.models
     {
         [Key]
         public int ProjectId { get; set; }
-        public string ProjectName { get; set; }=string.Empty;
+        public string Name { get; set; }=string.Empty;
         public string Status { get; set; }=ProjectStatus.NotStarted;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

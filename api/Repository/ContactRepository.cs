@@ -40,13 +40,13 @@ namespace api.Repository
             return contactModel;
         }
 
-        public async Task<List<Contact>> GetAllAsync(QueryObject query)
+        public async Task<List<Contact>> GetAllAsync(QO1 query)
         {
             var contacts = _context.Contacts.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(query.CompanyName))
+            if (!string.IsNullOrWhiteSpace(query.Name))
             {
-                contacts = contacts.Where(c => c.Name.Contains(query.CompanyName));
+                contacts = contacts.Where(c => c.Name.Contains(query.Name));
             }
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {

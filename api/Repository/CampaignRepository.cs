@@ -27,8 +27,8 @@ namespace api.Repository
 
         public async Task<Campaign> CreateAsync(Campaign CampaignModel)
         {
-            await _context.Campaigns.AddAsync(CampaignModel);
-            await _context.SaveChangesAsync();
+            _ = await _context.Campaigns.AddAsync(CampaignModel);
+            _ = await _context.SaveChangesAsync();
             return CampaignModel;
         }
 
@@ -42,12 +42,12 @@ namespace api.Repository
                 return null;
                 
             }
-            _context.Campaigns.Remove(CampaignModel);
-            await _context.SaveChangesAsync();
+            _ = _context.Campaigns.Remove(CampaignModel);
+            _ = await _context.SaveChangesAsync();
             return CampaignModel;
         }
 
-        public async Task<List<Campaign>> GetAllAsync(QueryObject query)
+        public async Task<List<Campaign>> GetAllAsync(QO1 query)
         {
             var Campaigns=_context.Campaigns.Include(c=>c.Leads).AsQueryable();
             if(!string.IsNullOrWhiteSpace(query.Name))
@@ -56,7 +56,7 @@ namespace api.Repository
             }
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
-                if (query.SortBy.Equals("CompanyName",StringComparison.OrdinalIgnoreCase))
+                if (query.SortBy.Equals("Name",StringComparison.OrdinalIgnoreCase))
                 {
                     Campaigns=query.IsDecending ? Campaigns.OrderByDescending(s=>s.Name):Campaigns.OrderBy(s=>s.Name);
                     
@@ -89,7 +89,7 @@ namespace api.Repository
             existingCampaign.EndDate=updateDto.EndDate;
 
 
-            await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
 
             return existingCampaign;
         }

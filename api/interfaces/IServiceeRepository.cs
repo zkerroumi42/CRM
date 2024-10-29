@@ -10,7 +10,7 @@ namespace api.interfaces
 {
     public interface IServiceeRepository
     {
-        Task<List<Servicee>>GetAllAsync(QueryObject query);
+        Task<List<Servicee>>GetAllAsync(QO1 query);
         Task<Servicee>GetByIdAsync(int id);
         Task<Servicee>CreateAsync(Servicee ServiceeModel);
         Task<Servicee?> GetByNameAsync(string name);

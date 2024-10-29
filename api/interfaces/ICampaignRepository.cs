@@ -11,7 +11,7 @@ namespace api.interfaces
     public interface ICampaignRepository
     {
         
-        Task<List<Campaign>>GetAllAsync(QueryObject query);
+        Task<List<Campaign>>GetAllAsync(QO1 query);
         Task<Campaign>GetByIdAsync(int id);
         Task<Campaign>CreateAsync(Campaign CampaignModel);
         Task<Campaign>UpdateAsync(int id,UpdateCampaignRequestDto CampaignDto);

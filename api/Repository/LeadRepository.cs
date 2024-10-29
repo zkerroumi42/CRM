@@ -22,8 +22,8 @@ namespace api.Repository
 
         public async Task<Lead> CreateAsync(Lead LeadModel)
         {
-            await _context.Leads.AddAsync(LeadModel);
-            await _context.SaveChangesAsync();
+            _ = await _context.Leads.AddAsync(LeadModel);
+            _ = await _context.SaveChangesAsync();
             return LeadModel;
         }
 
@@ -35,24 +35,33 @@ namespace api.Repository
             {
                 return null;
             }
-            _context.Leads.Remove(LeadModel);
-            await _context.SaveChangesAsync();
+            _ = _context.Leads.Remove(LeadModel);
+            _ = await _context.SaveChangesAsync();
             return LeadModel;
         }
 
-        public async Task<List<Lead>> GetAllAsync(QueryObject query)
+        public async Task<List<Lead>> GetAllAsync(QO1 query)
         {
-                        var Leads = _context.Leads.AsQueryable();
+            var Leads = _context.Leads.AsQueryable();
 
-
+            if(!string.IsNullOrWhiteSpace(query.Name))
+            {
+                Leads=Leads.Where(s=>s.Name.Contains(query.Name));
+            }
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
-                Leads = query.IsDecending
-                    ? Leads.OrderByDescending(a => EF.Property<object>(a, query.SortBy))
-                    : Leads.OrderBy(a => EF.Property<object>(a, query.SortBy));
+                if (query.SortBy.Equals("Name",StringComparison.OrdinalIgnoreCase))
+                {
+                    Leads=query.IsDecending ? Leads.OrderByDescending(s=>s.Name):Leads.OrderBy(s=>s.Name);
+                    
+                }
+
+   
             }
-            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+            var skipNumber=(query.PageNumber-1)*query.PageSize;
+
             return await Leads.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            
         }
 
         public async Task<Lead?> GetByIdAsync(int id)
@@ -76,7 +85,7 @@ namespace api.Repository
             existingLead.Name=LeadModel.Name;
             existingLead.Status=LeadModel.Status;
             existingLead.LeadSource=LeadModel.LeadSource;
-            await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
             return existingLead;
 
         }

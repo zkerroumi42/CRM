@@ -40,20 +40,28 @@ namespace api.Repository
             return ReviewModel;
         }
 
-        public async Task<List<Review>> GetAllAsync(QueryObject query)
+        public async Task<List<Review>> GetAllAsync(QO2 query)
         {
             var Reviews = _context.Reviews.Include(a => a.Customer).AsQueryable();
+            // if(!string.IsNullOrWhiteSpace(query.CreateAt))
+            // {
+            //     Reviews=Reviews.Where(s=>s.CreateAt.Contains(query.CreateAt));
+            // }
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
-                Reviews = query.IsDecending
-                    ? Reviews.OrderByDescending(c => EF.Property<object>(c, query.SortBy))
-                    : Reviews.OrderBy(c => EF.Property<object>(c, query.SortBy));
-            }
-
-            var skipNumber = (query.PageNumber - 1) * query.PageSize;
-            return await Reviews.Skip(skipNumber).Take(query.PageSize).ToListAsync();
-                
+                if (query.SortBy.Equals("Date",StringComparison.OrdinalIgnoreCase))
+                {
+                    Reviews=query.IsDecending ? Reviews.OrderByDescending(s=>s.CreateAt):Reviews.OrderBy(s=>s.CreateAt);
+                    
                 }
+
+   
+            }
+            var skipNumber=(query.PageNumber-1)*query.PageSize;
+
+            return await Reviews.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            
+        }
 
         public async Task<List<Review>> GetByServiceId(int serviceId)
         {

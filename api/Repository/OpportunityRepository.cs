@@ -41,21 +41,29 @@ namespace api.Repository
             return OpportunityModel;
         }
 
-        public async Task<List<Opportunity>> GetAllAsync(QueryObject query)
+        public async Task<List<Opportunity>> GetAllAsync(QO1 query)
         {
-            var Opportunitys = _context.Opportunities.AsQueryable();
+            var Opportunities = _context.Opportunities.AsQueryable();
 
+            if(!string.IsNullOrWhiteSpace(query.Name))
+            {
+                Opportunities=Opportunities.Where(s=>s.Name.Contains(query.Name));
+            }
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
-                Opportunitys = query.IsDecending
-                    ? Opportunitys.OrderByDescending(c => EF.Property<object>(c, query.SortBy))
-                    : Opportunitys.OrderBy(c => EF.Property<object>(c, query.SortBy));
-            }
-
-            var skipNumber = (query.PageNumber - 1) * query.PageSize;
-            return await Opportunitys.Skip(skipNumber).Take(query.PageSize).ToListAsync();
-                
+                if (query.SortBy.Equals("Name",StringComparison.OrdinalIgnoreCase))
+                {
+                    Opportunities=query.IsDecending ? Opportunities.OrderByDescending(s=>s.Name):Opportunities.OrderBy(s=>s.Name);
+                    
                 }
+
+   
+            }
+            var skipNumber=(query.PageNumber-1)*query.PageSize;
+
+            return await Opportunities.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            
+        }
 
         public async Task<List<Opportunity>> GetByCustomerId(int customerId)
         {

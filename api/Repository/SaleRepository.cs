@@ -19,21 +19,29 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<List<Sale>> GetAllAsync(QueryObject query)
+        public async Task<List<Sale>> GetAllAsync(QO2 query)
         {
             var sales = _context.Sales.AsQueryable();
 
+            // if(!string.IsNullOrWhiteSpace(query.date))
+            // {
+            //     sales=sales.Where(s=>s.Date.Contains(query.date));
+            // }
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
-                sales = query.IsDecending
-                    ? sales.OrderByDescending(s => EF.Property<object>(s, query.SortBy))
-                    : sales.OrderBy(s => EF.Property<object>(s, query.SortBy));
+                if (query.SortBy.Equals("CreateAt",StringComparison.OrdinalIgnoreCase))
+                {
+                    sales=query.IsDecending ? sales.OrderByDescending(s=>s.CreateAt):sales.OrderBy(s=>s.CreateAt);
+                    
+                }
+
+   
             }
+            var skipNumber=(query.PageNumber-1)*query.PageSize;
 
-            var skipNumber = (query.PageNumber - 1) * query.PageSize;
             return await sales.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            
         }
-
         public async Task<Sale> GetByIdAsync(int id)
         {
             return await _context.Sales.FindAsync(id);
@@ -52,7 +60,7 @@ namespace api.Repository
             if (sale == null) return null;
 
             sale.Amount = saleDto.Amount;
-            sale.Date = saleDto.Date;
+            sale.CreateAt = saleDto.Date;
 
             _ = await _context.SaveChangesAsync();
             return sale;

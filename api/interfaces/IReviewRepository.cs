@@ -10,7 +10,7 @@ namespace api.interfaces
 {
     public interface IReviewRepository
     {
-        Task<List<Review>>GetAllAsync(QueryObject query);
+        Task<List<Review>>GetAllAsync(QO2 query);
         Task<Review>GetByIdAsync(int id);
         Task<Review>CreateAsync(Review ReviewModel);
         Task<Review>UpdateAsync(int id,Review ReviewDto);

@@ -10,7 +10,7 @@ namespace api.interfaces
 {
     public interface IOpportunityRepository
     {
-        Task<List<Opportunity>>GetAllAsync(QueryObject query);
+        Task<List<Opportunity>>GetAllAsync(QO1 query);
         Task<Opportunity>GetByIdAsync(int id);
         Task<Opportunity>CreateAsync(Opportunity OpportunityModel);
         Task<Opportunity>UpdateAsync(int id,Opportunity OpportunityDto);

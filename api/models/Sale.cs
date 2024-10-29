@@ -14,7 +14,7 @@ namespace api.models
         [Key]
         public int SaleId { get; set; }
         public int Amount { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime CreateAt { get; set; }
         public int? AppUserId { get; set; }
         public  AppUser? AppUser { get; set; }
         public int? ProjectId { get; set; }

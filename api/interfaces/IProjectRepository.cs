@@ -10,7 +10,7 @@ namespace api.interfaces
 {
     public interface IProjectRepository
     {
-        Task<List<Project>>GetAllAsync(QueryObject query);
+        Task<List<Project>>GetAllAsync(QO1 query);
         Task<Project?>GetByIdAsync(int id);
         Task<Project>CreateAsync(Project ProjectModel);
         Task<Project?>UpdateAsync(int id,Project ProjectModel);

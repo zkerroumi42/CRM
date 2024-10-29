@@ -10,7 +10,7 @@ namespace api.interfaces
 {
     public interface ISaleRepository
     {
-        Task<List<Sale>>GetAllAsync(QueryObject query);
+        Task<List<Sale>>GetAllAsync(QO2 query);
         Task<Sale>GetByIdAsync(int id);
         Task<Sale>CreateAsync(Sale SaleModel);
         Task<Sale>UpdateAsync(int id,UpdateSaleRequestDto SaleDto);

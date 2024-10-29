@@ -47,7 +47,7 @@ namespace api.Repository
             return ServiceeModel;
         }
 
-        public async Task<List<Servicee>> GetAllAsync(QueryObject query)
+        public async Task<List<Servicee>> GetAllAsync(QO1 query)
         {
             var Servicees=_context.Servicees.Include(c=>c.Reviews).ThenInclude(a => a.Customer).AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.Name))
