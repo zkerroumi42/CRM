@@ -12,7 +12,7 @@ namespace api.Mappers
         public static ProjectDto ToProjectDto(this Project ProjectModel){
             return new ProjectDto{
                 ProjectId=ProjectModel.ProjectId,
-                ProjectName=ProjectModel.ProjectName,
+                ProjectName=ProjectModel.Name,
                 Status=ProjectModel.Status,
                 StartDate=ProjectModel.StartDate,
                 EndDate=ProjectModel.EndDate,
@@ -24,7 +24,7 @@ namespace api.Mappers
         {
             return new Project
             {
-                ProjectName=ProjectDto.ProjectName,
+                Name=ProjectDto.ProjectName,
                 Status=ProjectDto.Status,
                 StartDate=ProjectDto.StartDate,
                 EndDate=ProjectDto.EndDate,
@@ -35,7 +35,7 @@ namespace api.Mappers
                 public static Project ToProjectFromUpdate(this UpdateProjectRequestDto ProjectDto){
             return new Project
             {
-                ProjectName=ProjectDto.ProjectName,
+                Name=ProjectDto.ProjectName,
                 Status=ProjectDto.Status,
                 StartDate=ProjectDto.StartDate,
                 EndDate=ProjectDto.EndDate,

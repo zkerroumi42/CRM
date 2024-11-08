@@ -28,7 +28,7 @@ namespace api.controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject query){
+        public async Task<IActionResult> GetAll([FromQuery] QO1 query){
             var Campaign=await _CampaignRepo.GetAllAsync(query);
             var CampaignDto=Campaign.Select(s=>s.ToCampaignDto());
             return Ok(CampaignDto);

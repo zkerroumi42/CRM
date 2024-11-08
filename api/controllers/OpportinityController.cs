@@ -29,7 +29,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
+        public async Task<IActionResult> GetAll([FromQuery] QO1 query)
         {
             var Activities = await _OpportunityRepo.GetAllAsync(query);
             var OpportunityDtos = Activities.Select(s => s.ToOpportunityDto());

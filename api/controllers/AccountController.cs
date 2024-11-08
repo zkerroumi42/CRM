@@ -1,14 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using api.Dtos.Account;
 using api.interfaces;
 using api.Interfaces;
 using api.models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace api.Controllers
 {
@@ -134,6 +140,61 @@ namespace api.Controllers
 
             return BadRequest(result.Errors);
         }
+
+        [HttpGet("signin-google")]
+        public IActionResult SignInWithGoogle()
+        {
+            // This will redirect the user to Google's OAuth 2.0 consent screen
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = "http://localhost:5257"
+            };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("signin-google-callback")]
+public async Task<IActionResult> SignInGoogleCallback()
+{
+    var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+    if (!result.Succeeded)
+    {
+        return Unauthorized();
+    }
+
+    var claims = result.Principal?.Identities?.FirstOrDefault()?.Claims;
+    var userId = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+    var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+    if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(email))
+    {
+        return BadRequest("User information could not be retrieved.");
+    }
+
+    // Find the user by email
+    var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
+    
+    if (user == null)
+    {
+        // Optionally, you can create a new user here if the user does not exist in your database
+        user = new AppUser
+        {
+            UserName = email.Split('@')[0], // Use the part before the @ as the username
+            Email = email
+        };
+        var createResult = await _userManager.CreateAsync(user);
+        if (!createResult.Succeeded)
+        {
+            return StatusCode(500, createResult.Errors);
+        }
+    }
+
+    // Generate a JWT token using your existing CreateToken method
+    var token = _tokenService.CreateToken(user);
+
+    return Ok(new { Token = token, Email = email });
+}
+
+
 
 
     }

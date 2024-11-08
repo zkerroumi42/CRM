@@ -89,6 +89,22 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Authentication.Google/8.0.10": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.8": {
         "type": "package",
         "dependencies": {
@@ -1902,6 +1918,21 @@
         "lib/netstandard2.1/MailKit.xml",
         "mailkit.4.8.0.nupkg.sha512",
         "mailkit.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.Google/8.0.10": {
+      "sha512": "ponvsoyGJKn19I8lbOE7RKP4et1sT4Mf5OFtBqF/5+CVfC4dgQry/jQud9rF66iFy0kdUHOoIK9LXtBfePQjvg==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.google/8.0.10",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll",
+        "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.xml",
+        "microsoft.aspnetcore.authentication.google.8.0.10.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.google.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.8": {
@@ -4823,6 +4854,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "MailKit >= 4.8.0",
+      "Microsoft.AspNetCore.Authentication.Google >= 8.0.10",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.8",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 8.0.0",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 8.0.0",
@@ -4841,11 +4873,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\KERROUMI\\Desktop\\CRM\\api\\api.csproj",
+      "projectUniqueName": "C:\\Users\\KERROUMI\\Desktop\\CRM\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "c:\\Users\\KERROUMI\\Desktop\\CRM\\api\\api.csproj",
+      "projectPath": "C:\\Users\\KERROUMI\\Desktop\\CRM\\api\\api.csproj",
       "packagesPath": "C:\\Users\\KERROUMI\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\KERROUMI\\Desktop\\CRM\\api\\obj\\",
+      "outputPath": "C:\\Users\\KERROUMI\\Desktop\\CRM\\api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4887,6 +4919,10 @@
           "MailKit": {
             "target": "Package",
             "version": "[4.8.0, )"
+          },
+          "Microsoft.AspNetCore.Authentication.Google": {
+            "target": "Package",
+            "version": "[8.0.10, )"
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",

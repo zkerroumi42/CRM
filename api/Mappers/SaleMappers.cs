@@ -13,14 +13,14 @@ namespace api.Mappers
             return new SaleDto{
                 SaleId=SaleModel.SaleId,
                 Amount=SaleModel.Amount,
-                Date=SaleModel.Date,
+                Date=SaleModel.CreateAt,
             };
         }
         public static Sale ToSaleFromCreate(this CreateSaleRequestDto SaleDto){
             return new Sale
             {
                 Amount=SaleDto.Amount,
-                Date=SaleDto.Date,
+                CreateAt=SaleDto.Date,
 
             };
         }
@@ -29,7 +29,7 @@ namespace api.Mappers
             return new Sale
             {
                 Amount=SaleDto.Amount,
-                Date=SaleDto.Date,
+                CreateAt=SaleDto.Date,
             };
         }
         

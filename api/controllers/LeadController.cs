@@ -26,7 +26,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
+        public async Task<IActionResult> GetAll([FromQuery] QO1 query)
         {
             var Leads = await _LeadRepo.GetAllAsync(query);
             var LeadDtos = Leads.Select(s => s.ToLeadDto());
@@ -59,7 +59,7 @@ namespace api.Controllers
             }
 
             var LeadModel = LeadDto.ToLeadFromCreate(CampaignId);
-            await _LeadRepo.CreateAsync(LeadModel);
+            _ = await _LeadRepo.CreateAsync(LeadModel);
             return CreatedAtAction(nameof(GetById), new { id = LeadModel.LeadId }, LeadModel.ToLeadDto());
         }
 

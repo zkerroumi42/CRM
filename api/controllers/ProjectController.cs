@@ -27,7 +27,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
+        public async Task<IActionResult> GetAll([FromQuery] QO1 query)
         {
             var Activities = await _ProjectRepo.GetAllAsync(query);
             var ProjectDtos = Activities.Select(s => s.ToProjectDto());

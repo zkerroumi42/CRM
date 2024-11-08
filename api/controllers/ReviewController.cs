@@ -25,7 +25,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
+        public async Task<IActionResult> GetAll([FromQuery] QO2 query)
         {
             var reviews = await _reviewRepo.GetAllAsync(query);
             var reviewDtos = reviews.Select(r => r.ToReviewDto());

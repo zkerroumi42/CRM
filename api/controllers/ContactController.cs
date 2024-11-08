@@ -27,7 +27,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
+        public async Task<IActionResult> GetAll([FromQuery] QO1 query)
         {
             var contacts = await _contactRepo.GetAllAsync(query);
             var contactDtos = contacts.Select(s => s.ToContactDto());

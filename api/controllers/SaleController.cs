@@ -21,7 +21,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
+        public async Task<IActionResult> GetAll([FromQuery] QO2 query)
         {
             var sales = await _saleRepository.GetAllAsync(query);
             var saleDtos = sales.Select(s => s.ToSaleDto());
@@ -48,8 +48,8 @@ public async Task<IActionResult> Create([FromBody] CreateSaleRequestDto saleDto)
         return BadRequest(ModelState);
     }
 
-    var saleModel = saleDto.ToSaleFromCreate(); 
-    await _saleRepository.CreateAsync(saleModel);
+    var saleModel = saleDto.ToSaleFromCreate();
+            _ = await _saleRepository.CreateAsync(saleModel);
     return CreatedAtAction(nameof(GetById), new { id = saleModel.SaleId }, saleModel.ToSaleDto());
 }
 

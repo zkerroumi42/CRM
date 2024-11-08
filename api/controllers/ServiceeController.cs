@@ -26,7 +26,7 @@ namespace api.controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject query){
+        public async Task<IActionResult> GetAll([FromQuery] QO1 query){
             var Servicee=await _ServiceeRepo.GetAllAsync(query);
             var ServiceeDto=Servicee.Select(s=>s.ToServiceeDto());
             return Ok(ServiceeDto);
