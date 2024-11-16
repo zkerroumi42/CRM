@@ -3,6 +3,7 @@ using api.models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace api.Data
 {
@@ -30,52 +31,53 @@ namespace api.Data
         {
             base.OnModelCreating(builder);
 
+            // Configure composite keys and relationships
             _ = builder.Entity<SalaryService>()
                 .HasKey(ss => new { ss.AppUserId, ss.ServiceeId });
-                
+
             _ = builder.Entity<SalaryService>()
                 .HasOne(ss => ss.AppUser)
                 .WithMany(au => au.SalaryServices)
                 .HasForeignKey(ss => ss.AppUserId);
 
             _ = builder.Entity<SalaryService>()
-                .HasOne(ss => ss.Servicee) 
+                .HasOne(ss => ss.Servicee)
                 .WithMany(se => se.SalaryServices)
                 .HasForeignKey(ss => ss.ServiceeId);
 
             _ = builder.Entity<ProjectService>()
-                .HasKey(ss => new { ss.ProjectId, ss.ServiceeId });
-                
-            _ = builder.Entity<ProjectService>()
-                .HasOne(ss => ss.Project)
-                .WithMany(au => au.ProjectServices)
-                .HasForeignKey(ss => ss.ProjectId);
+                .HasKey(ps => new { ps.ProjectId, ps.ServiceeId });
 
             _ = builder.Entity<ProjectService>()
-                .HasOne(ss => ss.Servicee) 
-                .WithMany(se => se.ProjectServices)
-                .HasForeignKey(ss => ss.ServiceeId);
+                .HasOne(ps => ps.Project)
+                .WithMany(p => p.ProjectServices)
+                .HasForeignKey(ps => ps.ProjectId);
+
+            _ = builder.Entity<ProjectService>()
+                .HasOne(ps => ps.Servicee)
+                .WithMany(s => s.ProjectServices)
+                .HasForeignKey(ps => ps.ServiceeId);
 
             // Seed roles
-            List<IdentityRole> roles = new List<IdentityRole>
+            var roles = new List<IdentityRole>
             {
-                new IdentityRole
-                {
-                    Name = "Admin",
-                    NormalizedName = "ADMIN"
-                },
-                new IdentityRole
-                {
-                    Name = "Salesperson",
-                    NormalizedName = "SALESPERSON"
-                },
-                new IdentityRole
-                {
-                    Name = "Employee",
-                    NormalizedName = "EMPLOYEE"
-                },
+                new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
+                new IdentityRole { Name = "Salesperson", NormalizedName = "SALESPERSON" },
+                new IdentityRole { Name = "Employee", NormalizedName = "EMPLOYEE" }
             };
             _ = builder.Entity<IdentityRole>().HasData(roles);
+        }
+    }
+
+    // Design-time factory for ApplicationDBContext
+    public class ApplicationDBContextFactory : IDesignTimeDbContextFactory<ApplicationDBContext>
+    {
+        public ApplicationDBContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDBContext>();
+            _ = optionsBuilder.UseSqlServer("Server=sqlserver,1433;Database=crm;User Id=sa;Password=NewPassword!2024;");
+
+            return new ApplicationDBContext(optionsBuilder.Options);
         }
     }
 }

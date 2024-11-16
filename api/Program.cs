@@ -131,7 +131,7 @@ builder.Services.AddScoped<IActivityRepository,ActivityRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (true)//
 {
     _ = app.UseSwagger();
     _ = app.UseSwaggerUI();
@@ -152,3 +152,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+//Data Source=DESKTOP-EUFBUPH\\SQLEXPRESS;Initial Catalog=crm;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False
